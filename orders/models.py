@@ -14,7 +14,7 @@ class Order(models.Model):
     status = models.CharField(choices=Status.choices, default=Status.DRAFT)
 
     address = models.CharField(max_length=256, null=True)
-    delivery_fee = models.DecimalField
+    #delivery_fee = models.DecimalField()
 
 class OrderProducts(models.Model):
     order_id = models.AutoField(primary_key=True)

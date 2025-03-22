@@ -17,6 +17,10 @@ services:
     # Зависимость от другого сервиса
     depends_on:
       - pgdb
+    links:
+      - pgdb:pgdb
+    networks:
+      - djangonetwork
 
   pgdb:
     # Использование готового образа postgres
@@ -32,7 +36,13 @@ services:
     volumes:
       - pgdbdata:/var/lib/postgresql/data/
     ports:
-      - 5433:5432
+      - 5432:5432
+    networks:
+      - djangonetwork
+
+networks:
+  djangonetwork:
+    driver: bridge
 
 volumes:
   pgdbdata: null

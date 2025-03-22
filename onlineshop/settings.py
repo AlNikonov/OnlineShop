@@ -82,10 +82,11 @@ WSGI_APPLICATION = 'onlineshop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'onlineshop_db',
+        'NAME': 'db',
         'USER': 'myuser',
         'PASSWORD': 'mypassword',
-        'HOST': 'pgdb',
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
     }
 }
 
