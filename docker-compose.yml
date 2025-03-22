@@ -31,6 +31,8 @@ services:
      # Связывание тома с директорией в контейнере для сохранения данных postgres
     volumes:
       - pgdbdata:/var/lib/postgresql/data/
+    ports:
+      - 5433:5432
 
 volumes:
   pgdbdata: null
