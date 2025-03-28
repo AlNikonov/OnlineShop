@@ -4,8 +4,8 @@ from django.db import models
 class Products(models.Model):
     product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=100)
-    price = models.DecimalField
-    stored_amount = models.IntegerField
+    price = models.DecimalField()
+    stored_amount = models.IntegerField()
 
 
 class ProductImages(models.Model):

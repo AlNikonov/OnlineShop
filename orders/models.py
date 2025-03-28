@@ -19,5 +19,5 @@ class Order(models.Model):
 class OrderProducts(models.Model):
     order_id = models.AutoField(primary_key=True)
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE)
-    amount = models.IntegerField
+    amount = models.IntegerField()
 
