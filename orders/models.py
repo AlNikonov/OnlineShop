@@ -14,10 +14,10 @@ class Order(models.Model):
     status = models.CharField(choices=Status.choices, default=Status.DRAFT)
 
     address = models.CharField(max_length=256, null=True)
-    #delivery_fee = models.DecimalField()
+    delivery_fee = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
 class OrderProducts(models.Model):
     order_id = models.AutoField(primary_key=True)
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE)
-    amount = models.IntegerField()
+    amount = models.IntegerField(default=1)
 
