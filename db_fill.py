@@ -17,8 +17,8 @@ import random
 
 def handle():
     fake = Faker()
-
-    '''users = []
+    '''
+    users = []
     for i in range(5):
         user = User.objects.create(
             login=fake.first_name(),
@@ -28,8 +28,8 @@ def handle():
         )
         users.append(user)
         print(f'Created user with login {user.login}, email {user.email}, password {user.password}, username {user.username}')
-'''
-    '''orders = []
+
+    orders = []
     for i in range(15):
         order = Order.objects.create(
             user_id = User.objects.get(id=random.randint(1,4)),
@@ -38,7 +38,7 @@ def handle():
             #delivery_fee = 1.0
         )
         orders.append(order)
-        print(f'Created order with id {order.order_id}, belongs to user {order.user_id}, address {order.address}')'''
+        print(f'Created order with id {order.order_id}, belongs to user {order.user_id}, address {order.address}')
 
     products = []
     for i in range(20):
@@ -53,7 +53,7 @@ def handle():
     order_products = []
     for i in range (30):
         order_product = OrderProducts.objects.create(
-            order_id = Order.objects.get(id=i/2),
+            order_id = Order.objects.get(order_id=max(int(i/2), 1)),
             product_id = Products.objects.get(product_id=random.randint(1, 20)),
             amount = random.randint(1, 15)
         )
@@ -63,14 +63,14 @@ def handle():
     print('Show email of users which have orders with id in [2, 7, 9]')
     emails = User.objects.filter(order__order_id__in=[2,7,9]).values('email')
     print(emails)
-
+'''
     print('Show order products grouped by user')
     user = User.objects.get(id=1)
     ords = Order.objects.filter(user_id=1)
     order_info = []
     for order in ords:
 
-        order_products = OrderProducts.objects.filter(order_id=ords)
+        order_products = OrderProducts.objects.filter(order_id=order)
 
         products_in_order = []
         for product in order_products:

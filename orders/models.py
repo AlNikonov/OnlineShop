@@ -17,7 +17,8 @@ class Order(models.Model):
     delivery_fee = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
 class OrderProducts(models.Model):
-    order_id = models.AutoField(primary_key=True)
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE)
     amount = models.IntegerField(default=1)
+    pk = models.CompositePrimaryKey("product_id", "order_id")
 
