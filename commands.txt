@@ -1,0 +1,24 @@
+sudo docker ps -a
+
+sudo docker stop <name>
+
+sudo docker rm <name>
+
+sudo docker volume ls
+
+sudo docker volume rm <name>
+
+sudo docker volume prune
+
+
+
+sudo docker run --name pgdb -e POSTGRES_DB=onlineshop_db -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres
+
+(ONLY if models are changed)
+python3 manage.py makemigrations
+
+python3 manage.py runserver
+
+python3 manage.py migrate
+
+python3 db_fill.py
