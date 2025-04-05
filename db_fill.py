@@ -76,18 +76,18 @@ def handle():
     emails = User.objects.filter(order__order_id__in=[2, 7, 9]).values('email')
     print(emails)
 
-    print('Show order products grouped by user')
-    user = User.objects.get(id=1)
-    ords = Order.objects.filter(user_id=1)
-    order_info = []
-    for order in ords:
-
+    print('Show products ordered by user')
+    orders = Order.objects.filter(user_id=1)
+    for order in orders:
+        print(f'Order: {order.order_id}')
         order_products = OrderProducts.objects.filter(order_id=order)
-
-        products_in_order = []
         for product in order_products:
-            products_in_order.append([product.product_id, product.amount])
-        order_info.append([order.order_id, products_in_order])
-    print(f'User with id {1} have orders:')
-    for order in order_info:
-        print(f'order id {order[0]}, contains products wwith id\'s {order[1][0]}')
+            name = product.product_id.product_name
+            amount = product.amount
+            print(f'Product {name}, amount: {amount}')
+
+#fill_users_table()
+#fill_products_table()
+#fill_orders_table()
+#fill_order_products_table()
+handle()
