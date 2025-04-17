@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'users',
     'orders',
-    'products'
+    'products',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
