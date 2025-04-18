@@ -56,16 +56,16 @@ def create_order_product(request):
 @api_view(['PUT', 'GET', 'DELETE'])
 def order_products_details(request, order_id):
     order_details = OrderProducts.objects.filter(order_id=order_id)
-    if order_details is None:
+    if not order_details:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        return Response(OrderProductSerializer(order_details).data)
+        return Response(OrderProductSerializer(order_details, many=True).data)
     elif request.method == 'DELETE':
         order_details.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     elif request.method == 'PUT':
-        serializer = OrderProductSerializer(order_details, data=request.data)
+        serializer = OrderProductSerializer(order_details, data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

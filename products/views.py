@@ -59,16 +59,16 @@ def create_product_image(request):
 @api_view(['PUT', 'GET', 'DELETE'])
 def product_image_details(request, product_id):
     image = ProductImages.objects.filter(product_id=product_id)
-    if image is None:
+    if not image:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        return Response(ProductImageSerializer(image).data)
+        return Response(ProductImageSerializer(image, many=True).data)
     elif request.method == 'DELETE':
         image.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     elif request.method == 'PUT':
-        serializer = ProductImageSerializer(image, data=request.data)
+        serializer = ProductImageSerializer(image, data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
