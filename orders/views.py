@@ -36,3 +36,37 @@ def order_details(request, order_id):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_orders_details(request):
+    order_details = OrderProducts.objects.all()
+    return Response(OrderProductSerializer(order_details, many=True).data)
+
+
+@api_view(['POST'])
+def create_order_product(request):
+    serializer = OrderProductSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', 'GET', 'DELETE'])
+def order_products_details(request, order_id):
+    order_details = OrderProducts.objects.filter(order_id=order_id)
+    if order_details is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return Response(OrderProductSerializer(order_details).data)
+    elif request.method == 'DELETE':
+        order_details.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'PUT':
+        serializer = OrderProductSerializer(order_details, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
