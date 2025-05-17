@@ -17,10 +17,13 @@ def create_user(request):
             'user_id': user.id,
             'login': user.login
         })
-    return Response({
-        'refresh': str(refresh),
-        'access': str(refresh.access_token)
-    }, status=status.HTTP_201_CREATED)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        }, status=status.HTTP_201_CREATED)
+    return Response(
+        serializer.errors,
+        status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def login(request):

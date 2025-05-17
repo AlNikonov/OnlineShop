@@ -23,7 +23,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/refresh', TokenRefreshView.as_view, name='token_refresh')
+    path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('orders/', order_views.get_orders, name='get_orders'),
     path('orders/<int:order_id>', order_views.order_details, name='order_details'),
     path('orders/create', order_views.create_order, name='create_order'),
