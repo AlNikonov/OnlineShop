@@ -14,29 +14,25 @@ class UserManager(BaseUserManager):
     же самого кода, который Django использовал для создания User (для демонстрации).
     """
 
-    def create_user(self, login, username, email, password=None):
+    def create_user(self, username, email, password=None):
         """ Создает и возвращает пользователя с имэйлом, паролем и именем. """
-        if login is None:
-            raise TypeError('Users must have a login.')
         if username is None:
             raise TypeError('Users must have a username.')
         if email is None:
             raise TypeError('Users must have an email address.')
 
-        user = self.model(login=login, username=username, email=self.normalize_email(email))
+        user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, login, username, email, password):
+    def create_superuser(self, username, email, password):
         """ Создает и возввращет пользователя с привилегиями суперадмина. """
-        if login is None:
-            raise TypeError('Superusers must have a login.')
         if password is None:
             raise TypeError('Superusers must have a password.')
 
-        user = self.create_user(login, username, email, password)
+        user = self.create_user(username, email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -46,7 +42,7 @@ class UserManager(BaseUserManager):
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
 
-    login = models.CharField(max_length=100, unique=True)
+    #login = models.CharField(max_length=100, unique=True)
     # Каждому пользователю нужен понятный человеку уникальный идентификатор,
     # который мы можем использовать для предоставления User в пользовательском
     # интерфейсе. Мы так же проиндексируем этот столбец в базе данных для
@@ -83,8 +79,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # Свойство USERNAME_FIELD сообщает нам, какое поле мы будем использовать
     # для входа в систему. В данном случае мы хотим использовать почту.
-    USERNAME_FIELD = 'login'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ['email']
 
     # Сообщает Django, что определенный выше класс UserManager
     # должен управлять объектами этого типа.

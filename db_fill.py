@@ -20,14 +20,13 @@ def fill_users_table():
     users = []
     for i in range(5):
         user = User.objects.create(
-            login=fake.first_name(),
             email=fake.ascii_free_email(),
             password=fake.password(length=10),
             username=fake.name(),
         )
         users.append(user)
         print(
-            f'Created user with login {user.login}, email {user.email}, password {user.password}, username {user.username}')
+            f'Created user with email {user.email}, password {user.password}, username {user.username}')
 
 
 def fill_orders_table():
@@ -86,8 +85,8 @@ def handle():
             amount = product.amount
             print(f'Product {name}, amount: {amount}')
 
-#fill_users_table()
-#fill_products_table()
-#fill_orders_table()
-#fill_order_products_table()
-handle()
+fill_users_table()
+fill_products_table()
+fill_orders_table()
+fill_order_products_table()
+#handle()
