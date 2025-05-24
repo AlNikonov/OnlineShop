@@ -88,12 +88,3 @@ def user_details(request, user_id):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def testlogin(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    
-    TokenObtainPairView.as_view()(request)
-    #print(response)

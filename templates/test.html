@@ -1,0 +1,52 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+        <label><b>Username</b></label>
+        <input id="username" type="text" placeholder="Enter Username" name="username" required>
+
+        <label><b>Password</b></label>
+        <input id="password" type="password" placeholder="Enter Password" name="password" required>
+
+        <button id ="submit" type="submit">Login</button>
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+        <button type="button" class="cancelbtn">Cancel</button>
+        <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
+
+    <script type="text/javascript">
+
+        var submitBtn = document.getElementById('submit')
+        submitBtn.addEventListener('click', login)
+
+        function login() {
+
+            var usernameInput = document.getElementById('username')
+            console.log(usernameInput.value)
+            var passwordInput = document.getElementById('password')
+            console.log(passwordInput.value)
+            url = 'http://127.0.0.1:8000/auth/login'
+
+            fetch(url, {
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                },
+                body:JSON.stringify({'username':usernameInput.value, 'password':passwordInput.value})
+		    })
+			.then((resp) => resp.json())
+			.then(function(data) {
+                console.log('Data:', data)
+			}
+
+        )}
+
+    </script>
+
+{% endblock content %}

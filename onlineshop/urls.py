@@ -20,8 +20,14 @@ from orders import views as order_views
 from products import views as product_views
 from users import views as user_views
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
+from frontend import views as frontend_views
 
 urlpatterns = [
+    path('', frontend_views.store, name='store'),
+    path('register', frontend_views.register, name='register'),
+    path('login', frontend_views.testview, name='login'),
+
+
     path('admin/', admin.site.urls),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('orders/', order_views.get_orders, name='get_orders'),
@@ -33,7 +39,6 @@ urlpatterns = [
     path('users/', user_views.get_users, name='get_users'),
     path('auth/register', user_views.create_user, name='create_user'),
     path('auth/login', user_views.login, name='login'),
-    path('auth/testlogin', user_views.testlogin, name='testlogin'),
     path('auth/logout', user_views.logout, name='logout'),
     path('users/<int:id>', user_views.user_details, name='user_details'),
     path('product_images', product_views.get_products_images, name='get_product_images'),
