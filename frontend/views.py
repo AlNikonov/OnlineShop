@@ -5,9 +5,9 @@ from django.shortcuts import render
 
 # Create your views here.
 
-def testview(request):
+def login(request):
     context = {}
-    return render(request, 'test.html', context)
+    return render(request, 'login.html', context)
 
 def register(request):
     context = {}
@@ -17,15 +17,9 @@ def store(request):
     context = {}
     return render(request, 'store.html', context)
 
-def registration(request):
-    context = {}
-    return render(request, 'registration.html', context)
-
-
 def cart(request):
     context = {}
     return render(request, 'cart.html', context)
-
 
 def payment(request):
     context = {}

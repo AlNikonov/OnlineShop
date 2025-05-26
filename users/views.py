@@ -7,7 +7,26 @@ from .models import User
 from .serializer import RegistrationSerializer, UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate
+
+class CookieJWTAuthentication(JWTAuthentication):
+    def authenticate(self, request):
+        # 1. Проверяем токен в cookies (для HTTP-only)
+        raw_token = request.COOKIES.get('access_token')
+        
+        # 2. Если нет в cookies, проверяем в заголовке Authorization
+        if not raw_token:
+            header = self.get_header(request)
+            if header:
+                raw_token = self.get_raw_token(header)
+        
+        if not raw_token:
+            return None
+
+        # 3. Валидируем токен
+        validated_token = self.get_validated_token(raw_token)
+        return self.get_user(validated_token), validated_token
 
 @api_view(['POST'])
 def create_user(request):
@@ -19,10 +38,13 @@ def create_user(request):
             'user_id': user.id,
             'username': user.username
         })
-        return Response({
+        response = Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }, status=status.HTTP_201_CREATED)
+        response.set_cookie('refresh_token', refresh, httponly=True)
+        response.set_cookie('access_token', refresh.access_token, httponly=True)
+        return response
     return Response(
         serializer.errors,
         status=status.HTTP_400_BAD_REQUEST)

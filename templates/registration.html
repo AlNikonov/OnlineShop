@@ -35,7 +35,7 @@
     var email = document.getElementById('email').value
     var password = document.getElementById('psw').value
 
-    var url = 'http://127.0.0.1:8000/auth/register'
+    var url = 'http://localhost:8000/auth/register'
 
     fetch(url, {
         method:'POST',
@@ -50,7 +50,7 @@
             resp.json()
             .then(function(data) {
                 console.log('Data:', data)
-                window.location.replace('http://127.0.0.1:8000')}
+                window.location.replace('http://localhost:8000')}
             )
         }
         else {

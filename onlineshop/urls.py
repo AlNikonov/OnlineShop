@@ -25,10 +25,13 @@ from frontend import views as frontend_views
 urlpatterns = [
     path('', frontend_views.store, name='store'),
     path('register', frontend_views.register, name='register'),
-    path('login', frontend_views.testview, name='login'),
+    path('login', frontend_views.login, name='login'),
+    path('cart', frontend_views.cart, name='cart'),
+    path('payment', frontend_views.payment, name='payment'),
 
 
     path('admin/', admin.site.urls),
+    path('api/cart', order_views.cart, name='api_cart'),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('orders/', order_views.get_orders, name='get_orders'),
     path('orders/<int:order_id>', order_views.order_details, name='order_details'),
@@ -38,8 +41,8 @@ urlpatterns = [
     path('products/create', product_views.create_product, name='create_product'),
     path('users/', user_views.get_users, name='get_users'),
     path('auth/register', user_views.create_user, name='create_user'),
-    path('auth/login', user_views.login, name='login'),
-    path('auth/logout', user_views.logout, name='logout'),
+    path('auth/login', user_views.login, name='api_login'),
+    path('auth/logout', user_views.logout, name='api_logout'),
     path('users/<int:id>', user_views.user_details, name='user_details'),
     path('product_images', product_views.get_products_images, name='get_product_images'),
     path('product_images/create', product_views.create_product_image, name='create_product_image'),

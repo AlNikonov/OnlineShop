@@ -1,7 +1,20 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-     <div class="row">
+<script type="text/javascript">
+	var url = 'http://localhost:8000/api/cart'
+	fetch(url, {
+		method:'GET',
+		credentials:"include",
+		headers: {
+			'X-CSRFToken': csrftoken
+		}
+	})
+	.then(response => response.json())
+	.then(data => console.log(data))
+</script>
+
+    <div class="row">
 	<div class="col-lg-12">
 		<div class="box-element">
 	<a  class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
