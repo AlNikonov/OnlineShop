@@ -3,9 +3,8 @@
 {% block content %}
 <script type="text/javascript">
 	var url = 'http://localhost:8000/api/cart'
-	fetch(url, {
+	fetchauth(url, {
 		method:'GET',
-		credentials:"include",
 		headers: {
 			'X-CSRFToken': csrftoken
 		}
@@ -57,5 +56,21 @@
 	</div>
 	</div>
 </div>
+<button id="logout">
+	logout
+</button>
+<script type="text/javascript">
+	var url = "http://localhost:8000/auth/logout"
+	function performLogout() {
+		fetch(url, {
+			method:'POST',
+			credentials:"include",
+			headers: {
+				'X-CSRFToken': csrftoken
+			}
+		}).then(resp => {window.location.replace('http://localhost:8000/login')})
+	}
+	document.getElementById('logout').addEventListener('click', performLogout)
+</script>
 		 </div>
 {% endblock content %}

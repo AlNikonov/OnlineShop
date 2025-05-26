@@ -32,7 +32,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('api/cart', order_views.cart, name='api_cart'),
-    path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/refresh', user_views.CookieTokenRefreshView.as_view(), name='token_refresh'),
     path('orders/', order_views.get_orders, name='get_orders'),
     path('orders/<int:order_id>', order_views.order_details, name='order_details'),
     path('orders/create', order_views.create_order, name='create_order'),

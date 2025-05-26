@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Order, OrderProducts
 from .serializer import OrderSerializer, OrderProductSerializer
-from users.views import CookieJWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
@@ -74,7 +73,6 @@ def order_products_details(request, order_id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
-@authentication_classes([CookieJWTAuthentication])
 @permission_classes([IsAuthenticated])
 def cart(request):
     print(request.user)

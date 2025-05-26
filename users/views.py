@@ -1,32 +1,27 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from .serializer import RegistrationSerializer, UserSerializer
+from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate
 
-class CookieJWTAuthentication(JWTAuthentication):
-    def authenticate(self, request):
-        # 1. Проверяем токен в cookies (для HTTP-only)
-        raw_token = request.COOKIES.get('access_token')
+class CookieTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get('refresh')
         
-        # 2. Если нет в cookies, проверяем в заголовке Authorization
-        if not raw_token:
-            header = self.get_header(request)
-            if header:
-                raw_token = self.get_raw_token(header)
-        
-        if not raw_token:
-            return None
-
-        # 3. Валидируем токен
-        validated_token = self.get_validated_token(raw_token)
-        return self.get_user(validated_token), validated_token
+        if not refresh_token:
+            return Response(
+                {'detail': 'Refresh token not found in cookies'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        request.data['refresh'] = refresh_token
+        response = super().post(request, *args, **kwargs)
+        response.set_cookie('access', response.data.get('access'), httponly=True)
+        return response
 
 @api_view(['POST'])
 def create_user(request):
@@ -42,8 +37,8 @@ def create_user(request):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }, status=status.HTTP_201_CREATED)
-        response.set_cookie('refresh_token', refresh, httponly=True)
-        response.set_cookie('access_token', refresh.access_token, httponly=True)
+        response.set_cookie('refresh', refresh, httponly=True)
+        response.set_cookie('access', refresh.access_token, httponly=True)
         return response
     return Response(
         serializer.errors,
@@ -69,22 +64,32 @@ def login(request):
         'user_id': user.id,
         'username': user.username
     })
-    return Response({
+    response = Response({
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }, status=status.HTTP_200_OK)
+    response.set_cookie('refresh', refresh, httponly=True)
+    response.set_cookie('access', refresh.access_token, httponly=True)
+    return response
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout(request):
-    refresh = request.data.get('refresh_token')
+    refresh = request.COOKIES.get('refresh')
     if not refresh:
         return Response({ 'error': 'Refresh Token Required' }, status=status.HTTP_400_BAD_REQUEST)
     try:
         token = RefreshToken(refresh)
+        print(type(token))
         token.blacklist()
+
     except Exception as e:
+        print(e)
         return Response({'error': 'Invalid Refresh Token'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'success': 'Logout successfull'}, status=status.HTTP_200_OK)
+    response = Response({'success': 'Logout successfull'}, status=status.HTTP_200_OK)
+    response.delete_cookie('refresh')
+    response.delete_cookie('access')
+    return response
 
 @api_view(['GET'])
 def get_users(request):

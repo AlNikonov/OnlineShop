@@ -45,20 +45,25 @@ INSTALLED_APPS = [
     'products',
     'rest_framework',
     'rest_framework_simplejwt',
-    'frontend'
+    'rest_framework_simplejwt.token_blacklist',
+    'frontend',
 ]
 
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
 
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'users.authentication.CookieJWTAuthentication',
+        #'rest_framework_simplejwt.authentication.JWTAuthentication',
 
     ],
 
 }
 
+CORS_ALLOW_CREDENTIALS = True
+
 SIMPLE_JWT = {
+    'AUTH_COOKIE': 'refresh',
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
