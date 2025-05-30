@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,7 +7,7 @@ from .models import User
 from .serializer import RegistrationSerializer, UserSerializer
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
 
 class CookieTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
@@ -92,26 +92,27 @@ def logout(request):
     return response
 
 @api_view(['GET'])
+@authentication_classes([])
 def get_users(request):
     users = User.objects.all()
     print(users)
+
     return Response(UserSerializer(users, many=True).data)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_details(request):
+    token = RefreshToken(request.COOKIES.get('refresh'))
+    user = User.objects.get(id=token['user_id'])
+    return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
-@api_view(['PUT', 'GET', 'DELETE'])
-def user_details(request, user_id):
-    try:
-        user = User.objects.get(user_id=user_id)
-    except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        return Response(UserSerializer(user).data)
-    elif request.method == 'DELETE':
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    elif request.method == 'PUT':
-        serializer = UserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    oldpwd = request.data['oldpwd']
+    newpwd = request.data['newpwd']
+    if not request.user.check_password(oldpwd):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    request.user.set_password(newpwd)
+    request.user.save()
+    return Response(status=status.HTTP_200_OK)

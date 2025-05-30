@@ -28,6 +28,7 @@ urlpatterns = [
     path('login', frontend_views.login, name='login'),
     path('cart', frontend_views.cart, name='cart'),
     path('payment', frontend_views.payment, name='payment'),
+    path('me', frontend_views.user, name='user'),
 
 
     path('admin/', admin.site.urls),
@@ -42,8 +43,9 @@ urlpatterns = [
     path('users/', user_views.get_users, name='get_users'),
     path('auth/register', user_views.create_user, name='create_user'),
     path('auth/login', user_views.login, name='api_login'),
+    path('api/change_password', user_views.change_password, name='change_password'),
     path('auth/logout', user_views.logout, name='api_logout'),
-    path('users/<int:id>', user_views.user_details, name='user_details'),
+    path('api/user_info', user_views.user_details, name='user_details'),
     path('product_images', product_views.get_products_images, name='get_product_images'),
     path('product_images/create', product_views.create_product_image, name='create_product_image'),
     path('product_images/<int:product_id>', product_views.product_image_details, name='product_image_details'),

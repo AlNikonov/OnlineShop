@@ -56,21 +56,5 @@
 	</div>
 	</div>
 </div>
-<button id="logout">
-	logout
-</button>
-<script type="text/javascript">
-	var url = '{% url "api_logout" %}'
-	function performLogout() {
-		fetch(url, {
-			method:'POST',
-			credentials:"include",
-			headers: {
-				'X-CSRFToken': csrftoken
-			}
-		}).then(resp => {window.location.replace('{% url "login" %}')})
-	}
-	document.getElementById('logout').addEventListener('click', performLogout)
-</script>
 		 </div>
 {% endblock content %}

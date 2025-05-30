@@ -24,3 +24,7 @@ def cart(request):
 def payment(request):
     context = {}
     return render(request, 'payment.html', context)
+
+def user(request):
+    context = {}
+    return render(request, 'user.html', context)

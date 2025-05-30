@@ -1,0 +1,89 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<script type="text/javascript">
+    var url = '{% url "user_details" %}'
+    fetchauth(url, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    }).then((response) => {
+        if (response.status === 200) {
+            return response.json()
+        } else {
+            window.location.replace('{% url "login" %}')
+        }
+    }).then((data) => {
+        usernamefield = document.getElementById('username')
+        usernamefield.innerHTML = data.username
+        emailField = document.getElementById('email')
+        emailField.innerHTML = data.email
+    })
+
+
+</script>
+
+<div>
+    <div>
+        <strong>Userame</strong>
+        <div id="username"></div>
+
+        <strong>Email</strong>
+        <div id="email"></div>
+    </div>
+
+    <div>
+        <strong>Password</strong>
+        <div id="password_change_block">
+            <input type="password" placeholder="Enter Old Password" id="oldpwd" required>
+            <input type="password" placeholder="Enter New Password" id="newpwd" required>
+            <button id="change_password">Change</button>
+        </div>
+
+    </div>
+</div>
+<div>
+    <button id="logout">
+        logout
+    </button>
+</div>
+<script type="text/javascript">
+    var url = '{% url "api_logout" %}'
+    function performLogout() {
+        fetch(url, {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        }).then(resp => { window.location.replace('{% url "login" %}') })
+    }
+    document.getElementById('logout').addEventListener('click', performLogout)
+</script>
+<script type="text/javascript">
+    function change_password() {
+        var url = '{% url "change_password" %}'
+        var oldpwd = document.getElementById('oldpwd').value
+        var newpwd = document.getElementById('newpwd').value
+        fetchauth(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ 'oldpwd': oldpwd, 'newpwd': newpwd })
+        }).then(resp => {
+            if (resp.status === 200) {
+                document.getElementById("password_change_block").innerHTML += "<p>Password changed</p>"
+            } else {
+                document.getElementById("password_change_block").innerHTML += "<p>Something went wrong</p>"
+            }
+        })
+    }
+
+    document.getElementById('change_password').addEventListener('click', change_password)
+</script>
+
+{% endblock content %}

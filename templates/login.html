@@ -2,51 +2,50 @@
 {% load static %}
 {% block content %}
 
-    <div class="container">
-        <label><b>Username</b></label>
-        <input id="username" type="text" placeholder="Enter Username" name="username" required>
 
-        <label><b>Password</b></label>
-        <input id="password" type="password" placeholder="Enter Password" name="password" required>
+<div class="container">
+    <label><b>Username</b></label>
+    <input id="username" type="text" placeholder="Enter Username" name="username" required>
 
-        <button id ="submit" type="submit">Login</button>
-        <label>
-            <input type="checkbox" checked="checked" name="remember"> Remember me
-        </label>
+    <label><b>Password</b></label>
+    <input id="password" type="password" placeholder="Enter Password" name="password" required>
+
+    <button id="submit" type="submit">Login</button>
+
+    <div class="container signup">
+        <p>Do not have an account? <a href="{% url 'register' %}">Sign Up</a>.</p>
     </div>
 
-    <div class="container" style="background-color:#f1f1f1">
-        <button type="button" class="cancelbtn">Cancel</button>
-        <span class="psw">Forgot <a href="#">password?</a></span>
-    </div>
+</div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        var submitBtn = document.getElementById('submit')
-        submitBtn.addEventListener('click', login)
+    var submitBtn = document.getElementById('submit')
+    submitBtn.addEventListener('click', login)
 
-        function login() {
+    function login() {
 
-            var usernameInput = document.getElementById('username')
-            console.log(usernameInput.value)
-            var passwordInput = document.getElementById('password')
-            console.log(passwordInput.value)
-            url = '{% url "api_login" %}'
+        var usernameInput = document.getElementById('username')
+        console.log(usernameInput.value)
+        var passwordInput = document.getElementById('password')
+        console.log(passwordInput.value)
+        url = '{% url "api_login" %}'
 
-            fetch(url, {
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json',
-                },
-                body:JSON.stringify({'username':usernameInput.value, 'password':passwordInput.value})
-		    })
-			.then((resp) => resp.json())
-			.then(function(data) {
-                console.log('Data:', data)
-			}
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 'username': usernameInput.value, 'password': passwordInput.value })
+        })
+            .then((resp) => {
+                if (resp.status === 200) {
+                    window.location.replace('{% url "store" %}')
+                }
+            })
 
-        )}
+    }
 
-    </script>
+</script>
 
 {% endblock content %}
