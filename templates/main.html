@@ -38,7 +38,7 @@
 			init.credentials = 'include'
 			let response = await fetch(url, init)
 			if (response.status === 401) {
-				const refreshResponse = await fetch('http://localhost:8000/api/token/refresh', {
+				const refreshResponse = await fetch('{% url "token_refresh" %}', {
 					method: 'POST',
 					credentials: 'include', // Важно для HTTP-only cookies
 					headers: {
@@ -51,7 +51,7 @@
 					
 					response = await fetch(url, init)
 				} else {
-					window.location.replace('http://localhost:8000/login')
+					window.location.replace('{% url "login" %}')
 				}
 			}
 			return response

@@ -31,7 +31,7 @@
             console.log(usernameInput.value)
             var passwordInput = document.getElementById('password')
             console.log(passwordInput.value)
-            url = 'http://localhost:8000/auth/login'
+            url = '{% url "api_login" %}'
 
             fetch(url, {
                 method:'POST',

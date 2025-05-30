@@ -12,7 +12,7 @@
     <script type="text/javascript">
         renderProducts()
         function renderProducts() {
-        var url = 'http://localhost:8000/products'
+		var url = '{% url "get_products" %}'
 		var wrapper = document.getElementById('wrapper')
         fetch(url)
 			.then((resp) => resp.json())

@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <script type="text/javascript">
-	var url = 'http://localhost:8000/api/cart'
+	var url = '{% url "api_cart" %}'
 	fetchauth(url, {
 		method:'GET',
 		headers: {
@@ -60,7 +60,7 @@
 	logout
 </button>
 <script type="text/javascript">
-	var url = "http://localhost:8000/auth/logout"
+	var url = '{% url "api_logout" %}'
 	function performLogout() {
 		fetch(url, {
 			method:'POST',
@@ -68,7 +68,7 @@
 			headers: {
 				'X-CSRFToken': csrftoken
 			}
-		}).then(resp => {window.location.replace('http://localhost:8000/login')})
+		}).then(resp => {window.location.replace('{% url "login" %}')})
 	}
 	document.getElementById('logout').addEventListener('click', performLogout)
 </script>

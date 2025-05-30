@@ -1,6 +1,3 @@
-# Определение версии Docker Compose и начало описания сервисов
-version: '3'
-
 services:
   django:
     # Сборка образа для сервиса django из текущей директории
@@ -14,22 +11,15 @@ services:
     # Открытие порта на хостовой машине и перенаправление на порт в контейнере
     ports:
       - 8000:8000
-    # Зависимость от другого сервиса
     depends_on:
       - pgdb
-    links:
-      - pgdb:pgdb
-    networks:
-      - djangonetwork
 
   pgdb:
-    # Использование готового образа postgres
     image: postgres
-    # Задание переменных окружения для контейнера с postgres
     environment:
-      - POSTGRES_DB=onlineshop_db
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
+      POSTGRES_DB: onlineshop_db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
      # Задание имени контейнера для сервиса pgdb
     container_name: pgdb
      # Связывание тома с директорией в контейнере для сохранения данных postgres
@@ -37,12 +27,6 @@ services:
       - pgdbdata:/var/lib/postgresql/data/
     ports:
       - 5432:5432
-    networks:
-      - djangonetwork
-
-networks:
-  djangonetwork:
-    driver: bridge
 
 volumes:
   pgdbdata: null
