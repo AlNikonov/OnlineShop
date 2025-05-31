@@ -1,43 +1,54 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-	<div id="wrapper" class="row">
+<div id="wrapper" class="row">
 
+	{% for product in products %}
+	<div class="col-lg-4">
+		<img class="thumbnail" src="{% static product.image %}">
+		<div class="box-element product">
+			<h6><strong>{{product.product_name}}</strong></h6>
+			<hr>
+
+			<button data-product="{{product.product_id}}" data-action="add"
+				class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+			<h4 style="display: inline-block; float: right"><strong>${{product.price|floatformat:2}}</strong></h4>
+		</div>
 	</div>
 
+	{% endfor %}
+</div>
 
+<script type="text/javascript">
+		var updateBtns = document.getElementsByClassName('update-cart')
 
+		for (i = 0; i < updateBtns.length; i++) {
+			updateBtns[i].addEventListener('click', function () {
+				var productId = this.dataset.product
+				var action = this.dataset.action
+				console.log('productId:', productId, 'Action:', action)
 
+				updateUserOrder(productId, action)
+			})
+		}
 
-    <script type="text/javascript">
-        renderProducts()
-        function renderProducts() {
-		var url = '{% url "get_products" %}'
-		var wrapper = document.getElementById('wrapper')
-        fetch(url)
-			.then((resp) => resp.json())
-			.then(function(data){
-				console.log('Data:', data)
+		function updateUserOrder(productId, action) {
+			var url = '{% url "update_item" %}'
+			fetchauth(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+				},
+				body: JSON.stringify({ 'productId': productId, 'action': action })
+			})
+				.then((response) => {
+					return response.json();
+				})
+				.then((data) => {
+					console.log('Data:', data)
+				});
+		}
+</script>
 
-				var list = data
-				for (var i in list) {
-					var item = `
-					<div class="col-lg-4">
-						<img class="thumbnail" src="{% static 'images/placeholder.png' %}">
-						<div id="data-row-${i}" class="box-element product">
-							<h6><strong>${list[i].product_name}</strong></h6>
-							<hr>
-
-							<button data-product="{{product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
-							<a class="btn btn-outline-success" href="#">View</a>
-							<h4 style="display: inline-block; float: right"><strong>${list[i].price}$</strong></h4>
-						</div>
-					</div>
-					`
-
-					wrapper.innerHTML += item
-				}
-            })
-    	}
-    </script>
 {% endblock content %}

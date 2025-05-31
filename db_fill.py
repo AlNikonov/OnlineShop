@@ -5,10 +5,11 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "onlineshop.settings")
 django.setup()
 
 from django.core.management.base import BaseCommand
+from django.core.files import File
 from django.contrib.auth.models import User
 
 from users.models import User
-from products.models import Products, ProductImages
+from products.models import Products
 from orders.models import Order, OrderProducts
 
 from faker import Faker
@@ -85,6 +86,15 @@ def handle():
             amount = product.amount
             print(f'Product {name}, amount: {amount}')
 
+def create_single_product():
+    product = Products.objects.create(
+        product_name = 'Product',
+        price = 100,
+        stored_amount = 4,
+        #image = 'images/404placeholder.jpg'
+    )
+
+#create_single_product()
 fill_users_table()
 fill_products_table()
 fill_orders_table()

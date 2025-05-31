@@ -1,5 +1,25 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-     <img src="{% static 'images/404placeholder.jpg' %}" height="100%" width="100%">
+
+<script type="text/javascript">
+     var url = '{% url "process_order" %}'
+     fetchauth(url, {
+          method: 'POST',
+          headers: {
+               'Content-Type': 'application/json',
+               'X-CSRFToken': csrftoken
+          }
+     }).then(resp => {
+          if (resp.status === 200) {
+               document.getElementById('payment').innerHTML += 'Заказ принят в обработку'
+          }
+          else {
+               document.getElementById('payment').innerHTML += 'Что-то пошло не так'
+          }
+     })
+</script>
+<div id="payment">
+<img src="{% static 'images/404placeholder.jpg' %}" height="100%" width="100%">
+</div>
 {% endblock content %}

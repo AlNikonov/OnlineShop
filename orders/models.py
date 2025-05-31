@@ -15,10 +15,30 @@ class Order(models.Model):
 
     address = models.CharField(max_length=256, null=True)
     delivery_fee = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    
+    @property
+    def get_cart_total(self):
+        products = OrderProducts.objects.filter(order_id=self)
+        n = 0
+        for product in products:
+            n += product.get_total
+        return n
+    
+    @property
+    def get_cart_items(self):
+        products = OrderProducts.objects.filter(order_id=self)
+        n = 0
+        for product in products:
+            n += product.amount
+        return n
 
 class OrderProducts(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=1)
+    amount = models.IntegerField(default=0)
     pk = models.CompositePrimaryKey("product_id", "order_id")
+
+    @property
+    def get_total(self):
+        return self.product_id.price * self.amount
 
